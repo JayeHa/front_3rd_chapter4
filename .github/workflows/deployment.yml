@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node.js and install pnpm
         uses: actions/setup-node@v3
         with:
-          node-version: 16 # 프로젝트에 맞는 Node.js 버전 지정
+          node-version: 18 # Node.js 버전을 18 이상으로 설정
       - run: corepack enable
       - run: corepack prepare pnpm@latest --activate
 
