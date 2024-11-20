@@ -125,13 +125,27 @@
 
 ## 주요 개념
 
-- GitHub Actions과 CI/CD 도구:
-- S3와 스토리지:
-- CloudFront와 CDN:
-- 캐시 무효화(Cache Invalidation):
-- Repository secret과 환경변수:
+### GitHub Actions과 CI/CD 도구
 
-> 과제 팁1: 다이어그램 작성엔 Draw.io, Lucidchart 등을 이용합니다.
+GitHub Actions는 자동화된 워크플로우를 생성하여 CI/CD(Continuous Integration/Continuous Deployment)를 관리할 수 있는 도구입니다. 이를 통해 코드 변경 시마다 자동으로 빌드, 테스트, 배포를 수행합니다. GitHub Actions는 배포 파이프라인을 관리하는 데 중요한 역할을 합니다.
+
+### S3와 스토리지
+
+AWS S3는 정적 파일을 저장하고 제공하는 스토리지 서비스입니다. 이 서비스를 사용하여 빌드된 파일들을 안전하게 저장하고, 클라이언트에 제공할 수 있습니다.
+
+### CloudFront와 CDN
+
+CloudFront는 AWS의 콘텐츠 전송 네트워크(CDN) 서비스로, 전 세계에 분산된 서버를 통해 파일을 빠르게 전달합니다. CloudFront는 파일 캐시를 관리하고, 사용자가 파일을 더 빠르게 접근할 수 있도록 최적화합니다.
+
+### 캐시 무효화(Cache Invalidation)
+
+CloudFront의 캐시를 무효화하는 과정은 배포 후 반드시 수행되어야 합니다. 새로 배포된 파일이 캐시로 인해 사용자에게 전달되지 않는 문제를 방지하고, 최신 파일을 제공할 수 있도록 합니다. 이 과정은 자동화된 배포 프로세스의 중요한 부분입니다.
+
+### Repository secret과 환경변수
+
+GitHub에서 제공하는 `repository secret`과 `환경 변수`를 사용하여 민감한 정보를 안전하게 관리할 수 있습니다. 이를 통해 AWS 자격 증명, API 키 등 중요한 정보를 코드에 포함시키지 않고 안전하게 저장하고 사용할 수 있습니다.
+
+> 과제 팁1: 다이어그램 작성엔 Draw.io, [Lucidchart](https://lucid.app/documents#/documents?folder_id=home) 등을 이용합니다.
 
 > 과제 팁2: 새로운 프로젝트 진행시, 프론트엔드팀 리더는 예시에 있는 다이어그램을 준비한 후, 전사 회의에 들어가 발표하게 됩니다. 미리 팀장이 되었다 생각하고 아키텍쳐를 도식화 하는걸 연습해봅시다.
 
