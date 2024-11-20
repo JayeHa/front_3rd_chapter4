@@ -3,7 +3,7 @@ name: Deploy Next.js to S3 and invalidate CloudFront
 on:
   push:
     branches:
-      - main
+      - main # 또는 master, 프로젝트의 기본 브랜치 이름에 맞게 조정
   workflow_dispatch:
 
 jobs:

@@ -4,15 +4,119 @@
 
 - 다이어그램 작성 (Draw.io)
 
-GitHub Actions에 워크플로우를 작성해 다음과 같이 배포가 진행되도록 합니다.
+### IAM ROLE 정책 생성
+
+```yaml
+{ "Version": "2012-10-17", "Statement": [
+      # S3 관련 권한 ========================================================
+      {
+        "Sid": "S3Actions", # 정책 식별자
+        "Effect": "Allow",
+        "Action": [
+            "s3:PutObject", # S3에 객체 업로드
+            "s3:GetObject", # S3에서 객체 다운로드
+            "s3:ListBucket", # S3 버킷 내 객체 목록 조회
+            "s3:DeleteObject", # S3에서 객체 삭제
+            "s3:GetBucketLocation", # S3 버킷 위치 조회
+            "s3:ListAllMyBuckets", # 사용자의 모든 S3 버킷 조회
+          ],
+        "Resource": [
+            "arn:aws:s3:::your-bucket-name",
+            "arn:aws:s3:::your-bucket-name/*",
+          ], # S3 버킷 이름 및 버킷 내 객체 목록에 대해서만 적용
+      },
+
+      # CloudFront 관련 권한 ==================================================
+      {
+        "Sid": "CloudFrontActions", # 정책 식별자
+        "Effect": "Allow",
+        "Action": [
+            "cloudfront:CreateInvalidation", # 캐시 무효화 생성 (콘텐츠 업데이트 시 중요)
+            "cloudfront:GetDistribution", # CloudFront 배포 정보 조회
+            "cloudfront:ListDistributions", # CloudFront 배포 목록 조회
+          ],
+        "Resource": "*", # 모든 CloudFront 리소스에 대해 적용
+      },
+
+      # IAM 사용자 자신의 액세스 키 관리 권한 ==================================
+      {
+        "Sid": "ManageOwnAccessKeys", # 정책 식별자
+        "Effect": "Allow",
+        "Action": [
+            "iam:CreateAccessKey", # IAM 사용자 액세스 키 생성
+            "iam:DeleteAccessKey", # IAM 사용자 액세스 키 삭제
+            "iam:GetAccessKeyLastUsed", # IAM 사용자 액세스 키 마지막 사용 정보 조회
+            "iam:GetUser", # IAM 사용자 정보 조회
+            "iam:ListAccessKeys", # IAM 사용자의 액세스 키 목록 조회
+            "iam:UpdateAccessKey", # IAM 사용자 액세스 키 업데이트
+          ],
+        "Resource": "arn:aws:iam::*:user/${aws:username}", # 해당 사용자 자신의 IAM 사용자에 대해서만 적용
+      },
+    ] }
+```
+
+### GitHub Actions 워크플로우
+
+[GitHub Actions 워크플로우](https://docs.github.com/ko/actions/writing-workflows/quickstart)를 작성해 다음과 같이 배포가 진행되도록 합니다.
 
 1. 저장소를 체크아웃합니다.
+
+   ```yaml
+   - name: Checkout repository
+           uses: actions/checkout@v2
+   ```
+
 2. Node.js 18.x 버전을 설정합니다.
+
+   ```yaml
+   - name: Setup Node.js and install pnpm
+     uses: actions/setup-node@v3
+     with:
+       node-version: 18 # Node.js 버전을 18 이상으로 설정
+   - run: corepack enable
+   - run: corepack prepare pnpm@latest --activate
+   ```
+
 3. 프로젝트 의존성을 설치합니다.
+
+   ```yaml
+   - name: Install dependencies
+     run: pnpm install --frozen-lockfile # or npm ci
+   ```
+
 4. Next.js 프로젝트를 빌드합니다.
+
+   ```yaml
+   - name: Build
+     run: pnpm build # or npm run build
+   ```
+
 5. AWS 자격 증명을 구성합니다.
+
+   ```yaml
+   - name: Configure AWS credentials
+     uses: aws-actions/configure-aws-credentials@v1
+     with:
+       aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+       aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+       aws-region: ${{ secrets.AWS_REGION }}
+   ```
+
 6. 빌드된 파일을 S3 버킷에 동기화합니다.
+
+   ```yaml
+   - name: Deploy to S3
+     run: |
+       aws s3 sync out/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
+   ```
+
 7. CloudFront 캐시를 무효화합니다.
+
+   ```yaml
+   - name: Invalidate CloudFront cache
+     run: |
+       aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+   ```
 
 ## 주요 링크
 
