@@ -1,10 +1,13 @@
 - [프론트엔드 배포 파이프라인](#프론트엔드-배포-파이프라인)
   - [1.주요 링크](#1주요-링크)
   - [2. 개요](#2-개요)
-    - [2.1 배포 파이프라인](#21-배포-파이프라인)
+    - [2.1 정적 웹사이트 배포 파이프라인](#21-정적-웹사이트-배포-파이프라인)
     - [2.2 GitHub Actions 워크플로우](#22-github-actions-워크플로우)
   - [3. 주요 개념](#3-주요-개념)
     - [3.1 GitHub Actions과 CI/CD 도구](#31-github-actions과-cicd-도구)
+      - [3.1.1 CI/CD란?](#311-cicd란)
+      - [3.1.2 CI/CD 도구](#312-cicd-도구)
+      - [3.1.3 GitHub Actions](#313-github-actions)
     - [3.2 S3와 스토리지](#32-s3와-스토리지)
     - [3.3 CloudFront와 CDN](#33-cloudfront와-cdn)
     - [3.4 캐시 무효화(Cache Invalidation)](#34-캐시-무효화cache-invalidation)
@@ -20,7 +23,7 @@
   - [4. 결론](#4-결론)
 - [참고 자료](#참고-자료)
   - [공식문서](#공식문서)
-  - [블로그](#블로그)
+  - [블로그 및 기타소스](#블로그-및-기타소스)
 
 # 프론트엔드 배포 파이프라인
 
@@ -39,27 +42,27 @@
 
 ## 2. 개요
 
-### 2.1 배포 파이프라인
+### 2.1 정적 웹사이트 배포 파이프라인
 
 <img src="/public/diagram.png" alt="프론트엔드 배포 파이프라인 다이어그램" />
 
-1. **Git Repository**
+0. **Git Repository**
 
    - 개발자가 GitHub 저장소에 코드 푸시
 
-2. **CI/CD 파이프라인**
+1. **CI/CD 파이프라인**
 
    - `🐱GitHub Actions`에서 자동 빌드 및 테스트 실행
    - `🔑 AWS IAM`을 통한 리소스 접근 권한 관리
 
-3. **빌드 결과물 배포**
+2. **빌드 결과물 배포**
 
    - `🪣 S3 버킷` 에 빌드 산출물 업로드
    - `🔑 AWS IAM` 정책을 통한 접근 권한 제어
-     - `🪣 S3 버킷`에 대한 쓰기 권한 제공
-     - `🌎 CloudFront` 배포 설정에 대한 접근 권한 관리
+     - S3 버킷에 대한 쓰기 권한 제공
+     - CloudFront 배포 설정에 대한 접근 권한 관리
 
-4. **CDN 배포** 🌎
+3. **CDN 배포**
    - `🌎 CloudFront`를 통한 전역 배포
    - 캐시 전략을 통한 성능 최적화
 
@@ -130,9 +133,41 @@
 
 ### 3.1 GitHub Actions과 CI/CD 도구
 
-GitHub Actions는 자동화된 워크플로우를 생성하여 CI/CD(Continuous Integration/Continuous Deployment)를 관리할 수 있는 도구입니다.
-이를 통해 코드 변경 시마다 자동으로 빌드, 테스트, 배포를 수행합니다.
-GitHub Actions는 배포 파이프라인을 관리하는 데 중요한 역할을 합니다.
+#### 3.1.1 CI/CD란?
+
+CI/CD는 소프트웨어 개발 라이프사이클을 간소화하고 가속화하는 방법으로, 지속적 통합(Continuous Integration)과 지속적 제공/배포(Continuous Delivery/Deployment)를 포함합니다. CI/CD에 대한 자세한 설명은 [redhat 문서](https://www.redhat.com/ko/topics/devops/what-is-ci-cd)에서 확인할 수 있습니다.
+
+- **CI (지속적 통합):**
+
+  - 코드 변경 사항을 공유 소스 코드 리포지토리에 자동으로 자주 통합합니다.
+  - 변경된 코드가 기존 시스템에 문제가 없는지 자동으로 빌드하고 테스트하여 검증합니다.
+  - 테스트는 단위 테스트와 통합 테스트를 포함하며, 충돌을 빠르게 발견하고 수정할 수 있습니다.
+  - CI는 새로운 코드가 기존 코드와 충돌하지 않도록 빠르게 검증할 수 있어, 품질 높은 소프트웨어를 유지할 수 있습니다.
+
+- **CD (지속적 제공 및/또는 배포):**
+  - **지속적 제공:** CI에서 빌드된 코드를 리포지토리로 릴리스하고, 운영 팀이 이를 빠르게 프로덕션 환경으로 배포할 수 있도록 자동화합니다.
+  - **지속적 배포:** 지속적 제공을 확장하여, 자동으로 변경 사항을 프로덕션 환경에 릴리스합니다. 이 과정은 사용자 피드백을 빠르게 반영할 수 있도록 돕습니다.
+  - 이러한 자동화된 과정은 수동으로 이루어질 때 발생할 수 있는 오류를 줄이고, 더 빠르고 효율적인 배포가 가능하게 합니다.
+
+#### 3.1.2 CI/CD 도구
+
+2024년 인기 있는 CI/CD 도구들은 [20+ Best CI/CD Tools for DevOps in 2024
+](https://spacelift.io/blog/ci-cd-tools)에 따라 다음과 같습니다:
+
+<img src="https://spacelift.io/_next/image?url=https%3A%2F%2Fspaceliftio.wpcomstaging.com%2Fwp-content%2Fuploads%2F2022%2F09%2Fci-cd-tools-comparison.png&w=1920&q=75"/>
+
+- Spacelift
+- GitHub Actions
+- Jenkins
+- GitLab CI
+- CircleCI
+
+#### 3.1.3 GitHub Actions
+
+- **GitHub Actions**는 GitHub에서 제공하는 CI/CD 플랫폼으로, 리포지토리에서 직접 빌드, 테스트, 배포를 자동화할 수 있는 도구입니다. 자세한 내용은 [공식문서](https://docs.github.com/ko/actions/about-github-actions/understanding-github-actions)에서 확인할 수 있습니다.
+- 이를 통해 코드 변경 시마다 자동으로 워크플로우가 실행되어 빌드, 테스트, 배포가 이루어집니다. GitHub Actions는 자동화된 CI/CD 워크플로우를 설정하고, 이를 통해 개발 프로세스를 간소화할 수 있습니다.
+- 예를 들어, 끌어오기 요청(pull request)을 빌드하고 테스트하거나, 병합된 요청을 자동으로 프로덕션에 배포할 수 있는 워크플로우를 구성할 수 있습니다.
+- GitHub Actions의 주요 특징은 워크플로우 자동화, 리포지토리와 연동된 빌드, 테스트, 배포 과정 자동화입니다. 이를 통해 소프트웨어 개발 주기를 단축시키고, 품질을 높이며, 배포 주기를 빠르게 만들 수 있습니다.
 
 ### 3.2 S3와 스토리지
 
@@ -256,8 +291,8 @@ CloudFront CDN 도입으로 다음과 같은 주요 성능 개선을 달성했�
 - [IAM이란 무엇입니까?](https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/introduction.html)
 - [GitHub Actions에 대한 워크플로 구문](https://docs.github.com/ko/actions/writing-workflows/workflow-syntax-for-github-actions#about-yaml-syntax-for-workflows)
 
-## 블로그
+## 블로그 및 기타소스
 
-- [웹프론트개발팀에서 배민 커머스 어드민을 개발하는 방법](https://techblog.woowahan.com/15084/)
+- [CI/CD란?](https://www.redhat.com/ko/topics/devops/what-is-ci-cd)
 - [프론트엔드 CI/CD 파이프라인 구축](https://velog.io/@taegon1998/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-CICD-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8-%EA%B5%AC%EC%B6%95)
 - [팀에 맞는 프론트엔드 CI/CD 파이프라인 설계 및 배포 자동화 구축하기](https://medium.com/@dlxotjde_87064/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-ci-cd-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8-%EC%84%A4%EA%B3%84-%EB%B0%8F-%EB%B0%B0%ED%8F%AC-%EC%9E%90%EB%8F%99%ED%99%94-c84c973ce45d)
