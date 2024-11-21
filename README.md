@@ -233,7 +233,7 @@ GitHub에서 제공하는 `repository secret`과 `환경 변수`를 사용하여
 
 ### 3.2 주요 성능 지표 비교
 
-[네트워크 패널 하단의 상대표시줄](https://developer.chrome.com/docs/devtools/network/reference?utm_source=devtools&hl=ko#timing-explanation)을 통해 주요 성능 지표를 비교했습니다.
+[네트워크 패널 하단의 상대표시줄](https://developer.chrome.com/docs/devtools/network/reference?utm_source=devtools&hl=ko#total-number)을 통해 주요 성능 지표를 비교했습니다.
 
 <img src="/public/네트워크 탭 하단 상태표시줄 비교.png" />
 
