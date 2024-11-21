@@ -215,9 +215,9 @@ GitHub에서 제공하는 `repository secret`과 `환경 변수`를 사용하여
 
 ## 2. 테스트 환경
 
-- 테스트 도구: Chrome DevTools Network 탭
-- 측정 방식: 시크릿 모드에서 4회 반복 측정
-- 테스트 대상:
+- **테스트 도구:** Chrome DevTools Network 탭
+- **측정 방식:** 시크릿 모드에서 4회 반복 측정
+- **테스트 대상:**
   - CDN 도입 전: S3 버킷 직접 호스팅
   - CDN 도입 후: CloudFront 배포
 
@@ -229,7 +229,7 @@ GitHub에서 제공하는 `repository secret`과 `환경 변수`를 사용하여
 
 <img src="/public/네트워크 탭 비교.png" />
 
-→ CDN 도입 후(오른쪽)의 파일 사이즈와 응답속도가 현저히 개선된 것을 확인할 수 있습니다.
+→ CDN 도입 후(오른쪽)의 파일 사이즈와 응답속도가 전반적으로 개선된 것을 확인할 수 있습니다.
 
 ### 3.2 주요 성능 지표 비교
 
@@ -246,13 +246,15 @@ GitHub에서 제공하는 `repository secret`과 `환경 변수`를 사용하여
 | DOMContentLoaded      | 540ms   | 99ms    | 81.7% 감소 |
 | 로드 시간             | 1.21초  | 210ms   | 82.6% 감소 |
 
+→ 모든 지표에서 성능이 개선되었으며, 특히 로드 시간의 경우 82.6% 감소하였습니다.
+
 ### 3.3 응답 헤더 분석
 
 <img src="/public/응답 헤더 비교.png" />
 
 주요 개선사항:
 
-1. **컨텐츠 압축 적용**: Content-Encoding 헤더를 통해 gzip 압축 확인
+1. **컨텐츠 압축 적용**: Content-Encoding 헤더를 통해 [Brotli(Content-Encoding: br)](https://yozm.wishket.com/magazine/detail/1739/) 압축 확인
 2. **캐시 적용**: X-Cache 헤더 존재로 캐시 동작 확인
 
 ### 3.4 상세 응답 시간 분석
