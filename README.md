@@ -14,6 +14,9 @@
     - [캐시 무효화(Cache Invalidation)](#캐시-무효화cache-invalidation)
     - [Repository secret과 환경변수](#repository-secret과-환경변수)
   - [CDN과 성능최적화](#cdn과-성능최적화)
+- [참고 자료](#참고-자료)
+  - [공식문서](#공식문서)
+  - [블로그](#블로그)
 
 ## 주요 링크
 
@@ -141,7 +144,28 @@ GitHub에서 제공하는 `repository secret`과 `환경 변수`를 사용하여
 ## CDN과 성능최적화
 
 (CDN 도입 전과 도입 후의 성능 개선 보고서 작성)
+| 지표 | 도입 전 | 도입 후 |
+|---------------------------|--------|--------|
+| 전송 | 564 kB | 282 kB |
+| 완료 시간 | 7.02초 | 6.49초 |
+| DOMContentLoaded | 540ms | 99ms |
+| 로드 시간| 1.21초 | 210 ms |
 
 > 과제 팁1 : CDN 도입후 성능 개선 보고서 영역은 [프론트엔드 개발자를 위한 CloudFront](https://sprout-log-68d.notion.site/CloudFront-2c0653cb130f42b2b21078389511cca2) 에서 네트워크 탭을 비교한 영역을 참고해주세요. 이미지와 수치등을 표로 정리해서 보여주면 가독성이 높은 보고서가 됩니다.
 
 > 과제 팁2 : 저장소 → 스토리지 → CDN을 통해 정적파일을 배포하는 방식을 이해하지 못하면 다양한 기술 문서를 이해하지 못합니다. 링크로 첨부한 문서를 보고 실무에서 이런 네트워크 지식이 어떻게 쓰이는지 맛보기 해보세요.
+
+# 참고 자료
+
+## 공식문서
+
+- [Amazon S3 사용 설명서](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html)
+- [Amazon CloudFront 개발자 안내서](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html)
+- [IAM이란 무엇입니까?](https://docs.aws.amazon.com/ko_kr/IAM/latest/UserGuide/introduction.html)
+- [GitHub Actions에 대한 워크플로 구문](https://docs.github.com/ko/actions/writing-workflows/workflow-syntax-for-github-actions#about-yaml-syntax-for-workflows)
+
+## 블로그
+
+- [웹프론트개발팀에서 배민 커머스 어드민을 개발하는 방법](https://techblog.woowahan.com/15084/)
+- [프론트엔드 CI/CD 파이프라인 구축](https://velog.io/@taegon1998/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-CICD-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8-%EA%B5%AC%EC%B6%95)
+- [팀에 맞는 프론트엔드 CI/CD 파이프라인 설계 및 배포 자동화 구축하기](https://medium.com/@dlxotjde_87064/%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-ci-cd-%ED%8C%8C%EC%9D%B4%ED%94%84%EB%9D%BC%EC%9D%B8-%EC%84%A4%EA%B3%84-%EB%B0%8F-%EB%B0%B0%ED%8F%AC-%EC%9E%90%EB%8F%99%ED%99%94-c84c973ce45d)
