@@ -21,6 +21,7 @@
         - [5) CDN의 주요 사용 사례](#5-cdn의-주요-사용-사례)
         - [5) CDN의 활용](#5-cdn의-활용)
       - [3.3.2 Amazon CloudFront](#332-amazon-cloudfront)
+        - [CloudFront에서 콘텐츠를 제공하는 방식](#cloudfront에서-콘텐츠를-제공하는-방식)
     - [3.4 캐시 무효화(Cache Invalidation)](#34-캐시-무효화cache-invalidation)
     - [3.5 Repository secret과 환경변수](#35-repository-secret과-환경변수)
 - [\[심화과제\] CDN과 성능최적화](#심화과제-cdn과-성능최적화)
@@ -346,8 +347,32 @@ CDN은 전 세계적으로 콘텐츠를 효율적으로 제공하여 **속도, �
 > CloudFront는 엣지 로케이션이라고 하는 데이터 센터의 전 세계 네트워크를 통해 콘텐츠를 제공합니다.
 > CloudFront를 통해 서비스하는 콘텐츠를 사용자가 요청하면 지연 시간이 가장 낮은 엣지 로케이션으로 요청이 라우팅되므로 가능한 최고의 성능으로 콘텐츠가 제공됩니다.
 
-CloudFront는 AWS의 콘텐츠 전송 네트워크(CDN) 서비스로, 전 세계에 분산된 서버를 통해 파일을 빠르게 전달합니다.
-CloudFront는 파일 캐시를 관리하고, 사용자가 파일을 더 빠르게 접근할 수 있도록 최적화합니다.
+[아마존 공식문서](https://aws.amazon.com/ko/what-is/cdn/)에 따르면, Amazon CloudFront는 정적 및 동적 웹 콘텐츠를 사용자에게 더 빠르고 안정적으로 배포하기 위한 AWS의 콘텐츠 전송 네트워크(CDN) 서비스입니다.
+
+- **엣지 로케이션:** 전 세계에 분산된 데이터 센터 네트워크를 통해 콘텐츠를 제공합니다.
+- 사용자의 요청은 지리적으로 **가장 가까운 엣지 로케이션**으로 라우팅되어 최적의 성능을 제공합니다.
+- 엣지 로케이션에 콘텐츠가 없는 경우, **오리진 서버**(Amazon S3 버킷, HTTP 서버 등)에서 데이터를 가져옵니다.
+
+##### CloudFront에서 콘텐츠를 제공하는 방식
+
+<img src="https://docs.aws.amazon.com/ko_kr/AmazonCloudFront/latest/DeveloperGuide/images/how-cloudfront-delivers-content.png"/>
+
+출처: [CloudFront에서 사용자에게 콘텐츠를 제공하는 방법](https://docs.aws.amazon.com/ko_kr/AmazonCloudFront/latest/DeveloperGuide/HowCloudFrontWorks.html#HowCloudFrontWorksContentDelivery)
+
+1. **사용자 요청 처리:**
+
+   - 사용자가 웹사이트나 애플리케이션에 접근하면, 콘텐츠(예: 이미지, HTML 파일 등)에 대한 요청이 발생합니다.
+   - DNS는 요청을 지연 시간이 가장 낮은 **CloudFront POP**(엣지 로케이션)으로 라우팅합니다.
+
+2. **캐시 확인:**
+
+   - **POP에서 요청된 객체가 캐시에 있는 경우:**
+     - 즉시 사용자에게 콘텐츠를 제공합니다.
+   - **캐시에 없는 경우:**
+     - 요청은 오리진 서버(Amazon S3, HTTP 서버 등)로 전달됩니다.
+     - 오리진 서버에서 콘텐츠를 가져와 POP에 캐시하고 사용자에게 반환합니다.
+   - **빠른 전송:**
+     - 콘텐츠의 첫 번째 바이트가 도착하는 즉시, CloudFront는 사용자에게 데이터 전송을 시작합니다.
 
 ### 3.4 캐시 무효화(Cache Invalidation)
 
