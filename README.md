@@ -40,7 +40,7 @@
 
 ## 1.주요 링크
 
-- S3 버킷 웹사이트 엔드포인트: https://hanghae99.s3-website-ap-southeast-2.amazonaws.com
+- S3 버킷 웹사이트 엔드포인트: http://hanghae99.s3-website-ap-southeast-2.amazonaws.com/
 - CloudFront 배포 도메인 이름: https://d2xvtvxlifkv9.cloudfront.net
 
 ## 2. 개요
@@ -299,6 +299,26 @@ GitHub에서 제공하는 `repository secret`과 `환경 변수`를 사용하여
 
 <img src="/public/네트워크 탭 비교.png" />
 
+| 이름                         | 도입전 크기 | 도입 후 크기 | 크기 개선율 | 도입 전 시간 | 도입 후 시간 | 시간 개선율 |
+| ---------------------------- | ----------- | ------------ | ----------- | ------------ | ------------ | ----------- |
+| text/html                    | 12.4 kB     | 3.2 kB       | **74.19%**  | 330 ms       | 44 ms        | **86.67%**  |
+| 4473ecc91f70f139-s.p.woff    | 66.8 kB     | 66.7 kB      | **0.15%**   | 383 ms       | 107 ms       | **72.06%**  |
+| 463dafcda517f24f-s.p.woff    | 68.4 kB     | 68.3 kB      | **0.15%**   | 700 ms       | 150 ms       | **78.57%**  |
+| 80e6897492cf7ff8.css         | 9.1 kB      | 2.9 kB       | **68.13%**  | 203 ms       | 49 ms        | **75.86%**  |
+| Imagenext.svg                | 1.8 kB      | 1.1 kB       | **38.89%**  | 380 ms       | 102 ms       | **73.16%**  |
+| webpack-2afed4d10bc16fb2.js  | 3.8 kB      | 2.0 kB       | **47.37%**  | 375 ms       | 101 ms       | **73.07%**  |
+| 0759e794-dd46e11c5c9e6178.js | 167 kB      | 50.4 kB      | **69.82%**  | 973 ms       | 70 ms        | **92.81%**  |
+| 743-5eb21586de6d8583.js      | 182 kB      | 43.5 kB      | **76.10%**  | 861 ms       | 55 ms        | **93.61%**  |
+| main-app-3f41541ca5513008.js | 887 B       | 815 B        | **8.11%**   | 284 ms       | 55 ms        | **80.63%**  |
+| 75-5881d6c7f834e27b.js       | 14.4 kB     | 5.5 kB       | **61.81%**  | 288 ms       | 50 ms        | **82.64%**  |
+| page-e789aedd5130169a.js     | 619 B       | 548 B        | **11.48%**  | 184 ms       | 50 ms        | **72.83%**  |
+| Imagevercel.svg              | 550 B       | 481 B        | **12.55%**  | 498 ms       | 49 ms        | **90.16%**  |
+| Imagefile.svg                | 813 B       | 744 B        | **8.49%**   | 498 ms       | 50 ms        | **89.96%**  |
+| Imagewindow.svg              | 807 B       | 737 B        | **8.68%**   | 281 ms       | 51 ms        | **81.85%**  |
+| Imageglobe.svg               | 1.5 kB      | 900 B        | **40.00%**  | 498 ms       | 44 ms        | **91.16%**  |
+| Otherfavicon.ico             | 26.4 kB     | 26.3 kB      | **0.38%**   | 208 ms       | 48 ms        | **76.92%**  |
+| js.js                        | 1.3 kB      | 1.3 kB       | **0.00%**   | 4 ms         | 2 ms         | **100.00%** |
+
 → CDN 도입 후(오른쪽)의 파일 사이즈와 응답속도가 전반적으로 개선된 것을 확인할 수 있습니다.
 
 ### 3.2 주요 성능 지표 비교
@@ -322,7 +342,7 @@ GitHub에서 제공하는 `repository secret`과 `환경 변수`를 사용하여
 
 <img src="/public/응답 헤더 비교.png" />
 
-주요 개선사항:
+**주요 개선사항:**
 
 1. **컨텐츠 압축 적용**: Content-Encoding 헤더를 통해 [Brotli(Content-Encoding: br)](https://yozm.wishket.com/magazine/detail/1739/) 압축 확인
 2. **캐시 적용**: X-Cache 헤더 존재로 캐시 동작 확인
@@ -331,7 +351,7 @@ GitHub에서 제공하는 `repository secret`과 `환경 변수`를 사용하여
 
 <img src="/public/요청의 타이밍 분석 비교.png" />
 
-- 도입전: 331.41ms
+- 도입 전: 331.41ms
 - 도입 후: 45.16ms
 
 #### 시크릿 창에서 4회 반복 측정 결과:
